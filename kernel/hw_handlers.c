@@ -11,6 +11,8 @@
 #include "vm.h"
 #include "fs/file.h"
 #include "process.h"
+#include "kthread.h"
+
 
 /* copy vector table from wherever QEMU loads the kernel to 0x00 */
 void init_vector_table(void)
@@ -160,6 +162,26 @@ long __attribute__((interrupt("SWI"))) software_interrupt_handler(void)
 		os_printf("Printf system call called!\n");
 
 		os_printf((const char*) r0);
+		return 0L;
+	case SYSCALL_THREAD_CREATE:
+		os_printf("thread_create system call called!\n");
+		kthread_callback_handler cb_handler = 0;
+		kthread_handle* kthread =  kthread_create(cb_handler);
+		os_printf("r0: %d\n", r0);
+		os_printf("r1: %d\n", r1);
+		os_printf("r2: %d\n", r2);
+		os_printf("r3: %d\n", r3);
+		os_printf("R0: %d\n",kthread->R0);
+		os_printf("R15: %d\n",kthread->R15);
+		kthread->R0 = r1;
+		kthread->R15 = r0;
+		//set kthread return args etc. (necessary thread info)
+		//kthread->R0 = R2 
+		//find and set state to something reasonable
+		//call kthread_create
+		//give a kthread
+		//START kthread hopefully
+		kthread_start(kthread);
 		return 0L;
 	default:
 		os_printf("That wasn't a syscall you knob!\n");

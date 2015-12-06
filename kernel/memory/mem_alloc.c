@@ -120,6 +120,7 @@ uint32_t __mem_extend_proc_heap(uint32_t amt)
 
 void* proc_allocate(uint32_t size)
 {
+    os_printf("Entered proc allocate \n");
     return alloc_allocate(proc_allocator, size);
 }
 

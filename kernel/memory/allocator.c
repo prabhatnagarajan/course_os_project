@@ -92,6 +92,7 @@ uint32_t* __alloc_extend_heap(alloc_handle*allocator, uint32_t amount) {
 }
 
 void* alloc_allocate(alloc_handle * allocator, uint32_t size) {
+    //os_printf("Entered Alloc Allocate\n");
     int32_t i, ret_ptr;
 
     for (i = 0; i < allocator->heap_size;) {
@@ -119,6 +120,9 @@ void* alloc_allocate(alloc_handle * allocator, uint32_t size) {
 
             //can split this block
             else {
+
+		//os_printf("Returning here \n");
+
                 ret_ptr = i + sizeof(int32_t);
 
                 int32_t old_space = header;

@@ -52,9 +52,15 @@
 #define SYSCALL_ALIGNED_ALLOC 14
 #define SYSCALL_FREE 15
 #define SYSCALL_PRINTF 16
+#define SYSCALL_THREAD_CREATE 17
 #define SYSCALL_DUMMY 99
 
+
+typedef void *(*func_ptr)(void*);
+
 void init_vector_table(void); 
+//create_thread
+long create_thread(func_ptr, void *arg);
 
 // vector table handlers, should be loaded at 0x00 in this order!
 extern void _Reset();

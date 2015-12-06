@@ -1,11 +1,13 @@
+#include "syscall_arch.h"
 #include <thread.h>
+#include <stdio.h>
 
 /* 
  * \brief Creates a new thread.   
  *
  * \param[out] thread   The handle to the newly created thread.  
  * \param[in]  func	The function that the new thread shall execute.
- * \param[in]  arg	The argumet that is passed to the function when is executed.
+ * \param[in]  arg	The argument that is passed to the function when is executed.
  *
  * \return 		0 if successful, otherwise an error code:
  *			ERR_INSUFFICIENT_RESOURCES if there are not enough resources
@@ -14,7 +16,12 @@
  */
 int thread_create(thread_t *thread, void *(*func)(void*), void *arg)
 {
-   return -10;
+   if (thread == NULL)
+   {
+	return ERR_INVALID_ARGUMENTS;
+   }
+   __syscall3(17, (long)thread, (long) func, (long) arg);
+   return 0;
 }
 
 /* 
@@ -44,7 +51,7 @@ void thread_exit(void* result) {
  */
 int thread_join(thread_t thread, void **result)
 {
-
+	return 0;
 }
 
 /*
@@ -58,7 +65,7 @@ int thread_join(thread_t thread, void **result)
  */
 int thread_get_id(thread_t thread) 
 {
-
+	return 0;
 }
 
 /*

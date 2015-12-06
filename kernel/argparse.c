@@ -5,6 +5,7 @@
 #include "tests.h"
 #include "process.h"
 #include "fs/file.h"
+#include "scheduler.h"
 
 static void argparse_parse(char *);
 
@@ -110,7 +111,6 @@ static void argparse_parse(char *cmdline)
 				counter += 4;
 
 			}
-
 			pcb *proc = process_create((uint32_t*) start);
 
 			proc->len = len;
@@ -127,7 +127,13 @@ static void argparse_parse(char *cmdline)
 
 			}
 
-			execute_process(proc);
+			os_printf("Adding process to Scheduler\n");
+			//Creates Task from Process and adds to scheduler
+			sched_task *task = sched_create_task_from_process(proc,10);		
+			sched_add_task(task);
+			sched_start();
+
+			//execute_process(proc);
 		}
 		else if (os_strcmp("-test", token) == 0)
 		{

@@ -13,14 +13,16 @@ void* f(void* arg)
 
 void main(void)
 {
+/*
    thread_t thread;
 
    printf("before thread_create\n");
 
-   int rc = thread_create(&thread, f, (void*) 1);
-   assert(rc == 0);
+   //int rc = thread_create(&thread, f, (void*) 1);
+   //assert(rc == 0);
 
    printf("after thread_create\n");
 
    while(1) { }
+*/
 }

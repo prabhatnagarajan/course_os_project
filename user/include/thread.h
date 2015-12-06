@@ -1,9 +1,15 @@
-typedef struct thread * thread_t;
+typedef struct thread
+{
+	
+}* thread_t;
+//Change, added tid
 
 #define ERR_INSUFFICIENT_RESOURCES	-1
 #define ERR_INVALID_ARGUMENTS		-2
 #define ERR_INVALID_THREAD		-3
 #define ERR_THREAD_TERMINATED		-4
+
+
 
 /* 
  * \brief Creates a new thread.   

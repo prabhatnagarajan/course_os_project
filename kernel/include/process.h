@@ -150,7 +150,7 @@ typedef struct pcb
 //input
 //1) address of where the program code is in memory; elf and loader
 //process
-//do we n eed to create the stack and the heap?
+//do we need to create the stack and the heap?
 //do we need to know where the data is?
 //output
 //create a corresponding pcb ds
@@ -161,6 +161,7 @@ int init_pcb_table();
 pcb* process_create(uint32_t* file_p);
 uint32_t process_destroy(int PID);
 void print_PID();
+uint32_t get_pid(pcb* pcb_p);
 pcb* get_PCB(uint32_t PID);
 uint32_t free_PCB(pcb* pcb_p);
 uint32_t* get_address_of_PCB(uint32_t PID);

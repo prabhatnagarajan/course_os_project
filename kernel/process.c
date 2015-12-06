@@ -23,6 +23,14 @@ int init_all_processes()
  @param file pointer to location in memory of file
  @return pcb pointer upon success
  @return 0 if there is no more room in pcb table */
+
+//returns pid for process
+
+uint32_t get_pid(pcb* pcb_p)
+{
+	return pcb_p->PID;
+}
+
 pcb* process_create(uint32_t* file_p)
 {
 
@@ -144,7 +152,7 @@ void load_process_state(pcb* pcb_p)
 	asm("MOV r13, %0"::"r"(pcb_p->R13):);
 
 	asm("MOV r14, %0"::"r"(pcb_p->R14):);
-//assert(1==11);
+	//assert(1==11);
 
 	asm("MOV r15, %0"::"r"(pcb_p->R15):);
 
@@ -165,7 +173,7 @@ uint32_t print_process_state(uint32_t PID)
 	{
 		return 0;
 	}
-
+	
 	os_printf("Process State of PID: %d\n", PID);
 	os_printf("reg 0 = %x\n", pcb_p->R0);
 	os_printf("reg 1 = %x\n", pcb_p->R1);
@@ -363,14 +371,17 @@ void execute_process(pcb* pcb_p)
 	// Let's get a simple argc/argv layout going at 0x9f000000
 	// Stick the program name at stack_base
 	vm_enable_vas(pcb_p->stored_vas);
+	
 
-	print_process_state(pcb_p->PID);
+	//print_process_state(pcb_p->PID);
 
 	pcb_p->has_executed = 1;
 
 	//Set state to running, this should be modified when the process is tossed into wait queues, etc
 	//Check header file for a list of states
 	pcb_p->current_state = PROCESS_RUNNING;
+
+	os_printf("process state"); 
 
 	//This will overwrite all our operating registers with the ones saved in the struct.
 	//As soon as this is called the processor will start executing the new process.

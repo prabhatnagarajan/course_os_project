@@ -1,27 +1,17 @@
+#include <thread.h>
+#include <assert.h>
 #include <stdio.h>
-#include "../libc/arch/arm/syscall_arch.h"
-#include <fs_syscalls.h>
 
-int main() {
-	__syscall3(99, 0, 0, 0);
+void* f(void* arg)
+{
+   return NULL;
+}
 
-	printf("Hello world... from hello.c\n");
+void main(void)
+{
+   int rc = thread_create(NULL, f, (void*) 1);
 
-	printf("LET'S TEST %d\n", 10);
+   assert(rc == ERR_INVALID_ARGUMENTS);
 
-	int* mem = 0;
-	mem = (int*) malloc(100);
-
-	printf("malloc returned %x\n", mem);
-
-	mem[0] = 1;
-	mem[10] = 2;
-
-
-
-    free(mem);
-
-    printf("success\n");
-
-    while(1);
+   printf("passed\n");
 }

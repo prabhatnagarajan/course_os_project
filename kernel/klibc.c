@@ -612,7 +612,8 @@ unsigned int rand()
  * @return returns a pointer to the allocated block of memory
  */
 void* umalloc(uint32_t size)
-{
+{	
+	os_printf("Entered umalloc \n");
 	void* block = (void*) proc_allocate(size);
 	return block;
 }

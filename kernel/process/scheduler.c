@@ -1,5 +1,4 @@
 #include "global_defs.h"
-#include "kthread.h"
 #include "scheduler.h"
 #include "vm.h"
 #include "klibc.h"
@@ -8,6 +7,7 @@
 #include "data_structures/hash_map.h"
 #include "data_structures/array_list.h"
 #include "drivers/timer.h"
+#include "kthread.h"
 
 #define MAX_TASKS 100   // in the future, cap will be removed
 #define MAX_ACTIVE_TASKS 4  // in the future, will dynamically change based on load
@@ -64,7 +64,9 @@ void __sched_dispatch(void);
 
 void timer_handler(void *args)
 {
+	//CALL DISPATCH
 	os_printf("scheduler received timer interrupt, need to switch tasks...\n");
+	__sched_dispatch();
 }
 
 void __sched_register_timer_irq(void)
@@ -79,12 +81,29 @@ void __sched_deregister_timer_irq()
 
 void __sched_pause_timer_irq()
 {
-	// TODO: suspend the timer here
+	disable_timer(0);
 }
 
 void __sched_resume_timer_irq()
 {
-	// TODO: resume the timer here
+	enable_timer(0);
+}
+
+uint32_t get_process_pid()
+{
+	if (active_task) 
+	{
+		if (IS_PROCESS(active_task))
+		{
+			return AS_PROCESS(active_task)->PID;
+		}
+		if (IS_KTHREAD(active_task))
+		{
+			return AS_KTHREAD(active_task)->parent_pid;	
+		}
+	}
+	
+	return (uint32_t) STATUS_FAIL;
 }
 
 // get the current process id
@@ -151,7 +170,7 @@ uint32_t sched_free() {
 // issue messages for the active task
 void __sched_emit_messages(void) {
     if (active_task->cb_handler) {
-        sched_message_chunk * chunk;
+	sched_message_chunk* chunk;
         while ((chunk = llist_dequeue(active_task->message_queue)) != 0) {
             active_task->cb_handler(chunk->src_pid, chunk->event, chunk->data,
                     chunk->chunk_length, chunk->remain_length);
@@ -310,19 +329,22 @@ void __sched_dispatch(void) {
     __sched_pause_timer_irq();
 
     // use the kernel memory
-    vm_use_kernel_vas();
+    vm_use_kernel_vas();  
 
     if (prq_count(active_tasks) < MAX_ACTIVE_TASKS) {
+	//if there is something in the ready queue
         if (prq_count(inactive_tasks) > 0) {
             prq_enqueue(active_tasks, prq_dequeue(inactive_tasks)); // add to active_tasks if the task
         }
     }
 
+    //If there are no active tasks then do not context switch
     if (prq_count(active_tasks) == 0) {
         __sched_resume_timer_irq();
         return;
     }
 
+    //last task is what you are context switching from
     sched_task * last_task;
 
     // check if there is active task
@@ -339,9 +361,11 @@ void __sched_dispatch(void) {
             active_task->state = TASK_STATE_ACTIVE;
 
             if (IS_PROCESS(active_task)) {
-                __sched_resume_timer_irq();
+                __sched_resume_timer_irq(); 
                 execute_process(AS_PROCESS(active_task));
             } else if (IS_KTHREAD(active_task)) {
+		//get args from active task cast
+		execute_thread(AS_KTHREAD(active_task));
                 AS_KTHREAD(active_task)->cb_handler();
             }
 
@@ -369,11 +393,13 @@ void __sched_dispatch(void) {
                     save_process_state(AS_PROCESS(last_task));
                 } else if (IS_KTHREAD(active_task)) {
                     if (active_task == next_task) {
+			//vm_enable_vas(AS_KTHREAD(active_task)->stored_vas);
                         break;
                     }
 
                     // FIXME: implement
-                    // kthread_save_state(AS_KTHREAD(active_task));
+		    //PRABHAT: implement save state
+                   //kthread_save_state(AS_KTHREAD(active_task));
                 }
 
                 active_task = next_task;
@@ -384,10 +410,13 @@ void __sched_dispatch(void) {
                     __sched_emit_messages();
                     load_process_state(AS_PROCESS(active_task)); // continue with the next process
                 } else if (IS_KTHREAD(active_task)) {
+	            //vm_enable_vas(AS_KTHREAD(active_task)->stored_vas);
                     __sched_emit_messages();
 
                     // FIXME: implement
-                    // kthread_load_state(AS_KTHREAD(active_task));
+		    //PRABHAT: implement load state
+		   os_printf("About to dispatch thread\n");
+                  // kthread_load_state(AS_KTHREAD(active_task));
                 }
             }
             break;

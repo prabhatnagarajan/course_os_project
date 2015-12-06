@@ -28,6 +28,7 @@ int set_prescale(int timer_index, int mode);
 int start_timer_interrupts( int timer_index, int star_val);
 int conversion(int timer_index, int milliseconds);
 int enable_timer_interrupt(int timer_index);
+int enable_timer(int timer_index);
 int disable_timer(int timer_index);
 int register_handler(int timer_index, void (*handler)(void *args));
 int unregister_handler(int timer_index);
