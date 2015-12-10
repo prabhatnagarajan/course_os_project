@@ -395,13 +395,13 @@ void __sched_dispatch(void) {
                     save_process_state(AS_PROCESS(last_task));
                 } else if (IS_KTHREAD(active_task)) {
                     if (active_task == next_task) {
-			//vm_enable_vas(AS_KTHREAD(active_task)->stored_vas);
+			vm_enable_vas(AS_KTHREAD(active_task)->stored_vas);
                         break;
                     }
 
                     // FIXME: implement
 		    //PRABHAT: implement save state
-                   //kthread_save_state(AS_KTHREAD(active_task));
+                   kthread_save_state(AS_KTHREAD(active_task));
                 }
 
                 active_task = next_task;
@@ -412,13 +412,13 @@ void __sched_dispatch(void) {
                     __sched_emit_messages();
                     load_process_state(AS_PROCESS(active_task)); // continue with the next process
                 } else if (IS_KTHREAD(active_task)) {
-	            //vm_enable_vas(AS_KTHREAD(active_task)->stored_vas);
+	            vm_enable_vas(AS_KTHREAD(active_task)->stored_vas);
                     __sched_emit_messages();
 
                     // FIXME: implement
 		    //PRABHAT: implement load state
 		   os_printf("About to dispatch thread\n");
-                  // kthread_load_state(AS_KTHREAD(active_task));
+                   kthread_load_state(AS_KTHREAD(active_task));
                 }
             }
             break;
