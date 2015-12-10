@@ -154,6 +154,8 @@ void load_process_state(pcb* pcb_p)
 	asm("MOV r14, %0"::"r"(pcb_p->R14):);
 	//assert(1==11);
 
+	os_printf("asdlkjashdkfn");
+
 	asm("MOV r15, %0"::"r"(pcb_p->R15):);
 
 	__builtin_unreachable();

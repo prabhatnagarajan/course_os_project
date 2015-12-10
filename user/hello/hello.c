@@ -14,4 +14,8 @@ void main(void)
    assert(rc == ERR_INVALID_ARGUMENTS);
 
    printf("passed\n");
+
+   while (1)
+   {
+   }
 }

@@ -8,12 +8,10 @@
 -----------------------------------------------------------------------
 
 1) Group members
-     Name 1: [              ]
-     - Rating: [ ]  
-     Name 2: [              ]
-     - Rating: [ ] 
-     Name 3: [              ]
-     - Rating: [ ]  
+     Name 1: [Prabhat Nagarajan (myself)]
+     - Rating: [5]  
+     Name 2: [Jansen Derr (partner)]
+     - Rating: [5] 
 
 Notes: Rating can be:
        [5] Excellent Contributor, outstanding contributions
@@ -26,3 +24,6 @@ Notes: Rating can be:
    the project, you can summarize below what you tried to do, e.g., by describing
    your intended design in sufficient technical detail. Also mention where you
    had the biggest issues that prevented you from being more productive.
+
+
+

@@ -111,6 +111,8 @@ static void argparse_parse(char *cmdline)
 				counter += 4;
 
 			}
+
+			os_printf("Creating Process\n");
 			pcb *proc = process_create((uint32_t*) start);
 
 			proc->len = len;

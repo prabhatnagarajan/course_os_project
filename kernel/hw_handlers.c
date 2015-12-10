@@ -206,15 +206,16 @@ void __attribute__((interrupt("ABORT"))) data_abort_handler(void)
 {
 	int lr;
 	asm volatile("mov %0, lr" : "=r" (lr));
-	int pc = lr - 8;
+//	int pc = lr - 8;
 
 	int far;
 	asm volatile("mrc p15, 0, %0, c6, c0, 0" : "=r" (far));
 
+/*
 	os_printf("DATA ABORT HANDLER\n");
 	os_printf("faulting address: 0x%x\n", far);
 	os_printf("violating instruction (at 0x%x): %x\n", pc, *((int*) pc));
-
+*/
 	// Get the DSFR
 	int dsfr;
 	asm volatile("MRC p15, 0, %0, c5, c0, 0" : "=r" (dsfr));

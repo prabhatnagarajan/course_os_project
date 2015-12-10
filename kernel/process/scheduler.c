@@ -137,6 +137,7 @@ uint32_t sched_init(void) {
 // initial call that causes the scheduler to start
 void sched_start(void)
 {
+	os_printf("Entered scheduler start\n");
 	__sched_dispatch();
 }
 
@@ -188,6 +189,7 @@ sched_task* __sched_create_task(void * task_data, int niceness, uint32_t type) {
     }
 
     __sched_pause_timer_irq();
+    
 
     sched_task * task = (sched_task*) kmalloc(sizeof(sched_task));
 
@@ -220,6 +222,7 @@ sched_task* sched_create_task_from_kthread(kthread_handle * kthread,
 }
 
 sched_task* sched_create_task_from_process(pcb * pcb_pointer, int niceness) {
+    os_printf("entered create task from proces \n");
     return __sched_create_task(pcb_pointer, niceness, PROCESS);
 }
 
@@ -364,7 +367,6 @@ void __sched_dispatch(void) {
                 __sched_resume_timer_irq(); 
                 execute_process(AS_PROCESS(active_task));
             } else if (IS_KTHREAD(active_task)) {
-		//get args from active task cast
 		execute_thread(AS_KTHREAD(active_task));
                 AS_KTHREAD(active_task)->cb_handler();
             }

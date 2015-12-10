@@ -13,6 +13,7 @@
 
 void execute_thread(kthread_handle* kthread)
 {
+/*
 	//assert(pcb_p);
 
 	//Copy the current process's program counter to the new process's return register
@@ -48,6 +49,7 @@ void execute_thread(kthread_handle* kthread)
 	//This will overwrite all our operating registers with the ones saved in the struct.
 	//As soon as this is called the processor will start executing the new process.
 	kthread_load_state(kthread);
+*/
 }
 
 //changed to take in args
